@@ -51,4 +51,21 @@ class AuthorController extends Controller
         Author::find($request->id)->delete();
         return redirect('/');
     }
+    public function get() {
+        $text = [
+            'content' => '自由に入力してください'
+        ];
+        return view('middleware', $text);
+    }
+    public function post(Request $request) {
+        $content = $request->content;
+        $text = [
+            'content' => $content. 'と入力しましたね'
+        ];
+        return view('middleware', $text);
+    }
+    public function relate(Request $request) {
+        $authors = Author::all();
+        return view('author.index', ['authors' => $authors]);
+    }
 }

@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Author extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name', 'age', 'nationality'
     ];
+
+    public function book() {
+        return $this->hasOne('App\Models\Book');
+    }
 }
