@@ -12,17 +12,6 @@ class AuthorController extends Controller
         $authors = Author::all();
         return view('index', ['authors' => $authors]);
     }
-    public function find() {
-        return view('find', ['input' => '']);
-    }
-    public function search(Request $request) {
-        $author = Author::find($request->input);
-        $param = [
-            'author' => $author,
-            'input' => $request->input
-        ];
-        return view('find', $param);
-    }
     public function add() {
         return view('add');
     }
@@ -30,6 +19,17 @@ class AuthorController extends Controller
         $form = $request->all();
         Author::create($form);
         return redirect('/');
+    }
+    public function find() {
+        return view('find', ['input' => '']);
+    }
+    public function search(Request $request) {
+        $author = Author::where('name', 'LIKE BINARY',"%{$request->input}%")->first();
+        $param = [
+            'input' => $request->input,
+            'author' => $author
+        ];
+        return view('find', $param);
     }
     public function edit(Request $request) {
         $author = Author::find($request->id);
@@ -50,6 +50,12 @@ class AuthorController extends Controller
     {
         Author::find($request->id)->delete();
         return redirect('/');
+    }
+    public function bind(Author $author) {
+        $data = [
+            'author'=>$author,
+        ];
+        return view('author.binds', $data);
     }
     public function get() {
         $text = [
