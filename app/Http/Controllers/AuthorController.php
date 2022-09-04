@@ -9,7 +9,7 @@ use App\Http\Requests\AuthorRequest;
 class AuthorController extends Controller
 {
     public function index() {
-        $authors = Author::all();
+        $authors = Author::simplePaginate(4);
         return view('index', ['authors' => $authors]);
     }
     public function add() {
@@ -71,7 +71,9 @@ class AuthorController extends Controller
         return view('middleware', $text);
     }
     public function relate(Request $request) {
-        $authors = Author::all();
-        return view('author.index', ['authors' => $authors]);
+        $hasbooks = Author::has('book')->get();
+        $nobooks = Author::doesntHave('book')->get();
+        $param = ['hasbooks' => $hasbooks, 'nobooks' => $nobooks];
+        return view('author.index', $param);
     }
 }

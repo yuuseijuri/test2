@@ -27,4 +27,5 @@
   </tr>
   @endforeach
 </table>
+{{$authors->links()}}
 @endsection
