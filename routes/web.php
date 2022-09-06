@@ -5,7 +5,11 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Middleware\FirstMiddleware;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\SchoolController;
 use App\Models\Person;
+use App\Models\Product;
+use Illuminate\Routing\Route as RoutingRoute;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -70,3 +74,14 @@ Route::get('softdelete/absolute', function () {
   $result = Person::onlyTrashed()->forceDelete();
   return $result;
 });
+
+Route::get('uuid', function () {
+  $products = Product::all();
+  foreach($products as $product) {
+    echo $product. '<br>';
+  }
+});
+
+Route::get('fill', [SchoolController::class, 'fillSchool']);
+Route::get('create', [SchoolController::class, 'createSchool']);
+Route::get('insert', [SchoolController::class, 'insertSchool']);
