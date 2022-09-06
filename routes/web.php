@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthorController;
 use App\Http\Middleware\FirstMiddleware;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SessionController;
+use App\Models\Person;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,11 +17,7 @@ use App\Http\Controllers\SessionController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-Route::get('/', [AuthorController::class, 'index']);
+Route::get('/home', [AuthorController::class, 'index'])->middleware('auth');
 Route::get('/find', [AuthorController::class, 'find']);
 Route::post('/find', [AuthorController::class, 'search']);
 Route::get('/add', [AuthorController::class, 'add']);
@@ -41,3 +38,35 @@ Route::get('/relation', [AuthorController::class, 'relate']);
 Route::get('/session', [SessionController::class, 'getSes']);
 Route::post('/session', [SessionController::class, 'postSes']);
 Route::get('/back', [SessionController::class, 'backHome']);
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
+
+Route::get('/auth', [AuthorController::class, 'check']);
+Route::post('/auth', [AuthorController::class, 'checkUser']);
+
+Route::get('/softdelete', function () {
+  $result = Person::find(1)->delete();
+  if ($result) {
+    return "論理削除されました";
+  }
+});
+Route::get('softdelete/get', function () {
+  $person = Person::onlyTrashed()->get();
+  return $person;
+});
+Route::get('softdelete/store', function() {
+  $result = Person::onlyTrashed()->restore();
+  return $result;
+});
+Route::get('softdelete/absolute', function () {
+  $result = Person::onlyTrashed()->forceDelete();
+  return $result;
+});
